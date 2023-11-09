@@ -5,7 +5,6 @@ use sdl2::{
     render::Canvas,
     video::Window,
 };
-#[derive(Debug)]
 
 pub struct Renderer {
     pub screen_area: Rect,
@@ -31,6 +30,11 @@ impl Renderer {
 
     pub fn update(&self, canvas: &mut Canvas<Window>, game: &GameState) {
         self.draw_snake(canvas, game);
+        self.draw_apple(canvas, game)
+    }
+
+    fn draw_apple(&self, canvas: &mut Canvas<Window>, game: &GameState) {
+        self.draw_cell(game.apple.position, game.apple.color, canvas);
     }
 
     fn draw_snake(&self, canvas: &mut Canvas<Window>, game: &GameState) {

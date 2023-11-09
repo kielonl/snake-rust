@@ -5,13 +5,15 @@ mod view;
 use view::board_view::Renderer;
 
 mod model;
-use model::game::{Direction, GameState};
+use model::game::GameState;
 
 const SCREEN_WIDTH: u32 = 800;
 const SCREEN_HEIGHT: u32 = 800;
-const TARGET_FPS: u32 = 8;
+const TARGET_FPS: u32 = 16;
+
 fn main() -> Result<(), String> {
     let sdl_context = sdl2::init()?;
+
     let video_subsystem = sdl_context.video()?;
     let window = video_subsystem
         .window("snake", SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -35,23 +37,11 @@ fn main() -> Result<(), String> {
                     running = false;
                 }
 
-                Event::KeyDown { keycode, .. } => match keycode.unwrap() {
-                    sdl2::keyboard::Keycode::D => {
-                        game_state.player.change_direction(Direction::Right)
-                    }
-                    sdl2::keyboard::Keycode::A => {
-                        game_state.player.change_direction(Direction::Left)
-                    }
-                    sdl2::keyboard::Keycode::W => game_state.player.change_direction(Direction::Up),
-                    sdl2::keyboard::Keycode::S => {
-                        game_state.player.change_direction(Direction::Down)
-                    }
-                    _ => {}
-                },
+                Event::KeyDown { keycode, .. } => game_state.get_direction_key(keycode),
                 _ => {}
             }
         }
-        game_state.player.update();
+        game_state.update();
         game_view.render(&mut canvas, &game_state);
         canvas.present();
 
